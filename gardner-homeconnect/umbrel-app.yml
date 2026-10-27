@@ -1,0 +1,51 @@
+manifestVersion: 2.0
+id: gardner-homeconnect
+storage:
+  dataRoot: data
+environment:
+  - name: HC_PUBLIC_URL
+    services: [server]
+    note: Private canonical URL reachable by both the comma and your phone, such as http://umbrel.tailnet-name.ts.net:8099. Configure before pairing.
+  - name: HC_DEVICE_SSH_TARGET
+    services: [server]
+    note: The comma's private IP. This initial package supports one comma.
+  - name: HC_SCP_LIMIT_KBIT
+    services: [server]
+    default: "8000"
+    note: Per-transfer cap in kilobits per second; one transfer runs at a time.
+  - name: HC_SYNC_FULLRES
+    services: [server]
+    default: "true"
+    options: ["true", "false"]
+    note: Seeds initial sync types only. After first start, change camera selection in Homeconnect Settings.
+  - name: HC_RETAIN_GB
+    services: [server]
+    default: "0"
+    note: Initial server retention size. Zero disables automatic size pruning. Configure a budget before unattended use; runtime Settings takes precedence.
+category: files
+name: Homeconnect
+version: "0.1.0-dev"
+tagline: Your comma drive recordings on your own server
+description: >-
+  Development package for privately archiving recordings from one comma device.
+  Requires Umbrel 2.x, private connectivity to your comma, dedicated recording
+  storage and a reviewed BluePilot connection procedure. Set the private server
+  URL and comma IP in App settings > Advanced, then restart.
+
+
+  Log in as admin with the password shown in Umbrel Default credentials. Videos
+  and SQLite data stay on your server. No separate database or S3 stack is needed.
+  Remote device changes and upstream automatic onboarding are disabled.
+releaseNotes: ""
+developer: bamonroe (homeconnect); community integration
+website: https://github.com/bamonroe/homeconnect
+dependencies: [tailscale]
+repo: https://github.com/bamonroe/homeconnect
+support: https://github.com/bamonroe/homeconnect/issues
+port: 8099
+gallery: []
+path: ""
+defaultUsername: admin
+deterministicPassword: true
+defaultPassword: ""
+submitter: Sean Gardner

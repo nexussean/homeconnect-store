@@ -1,0 +1,38 @@
+services:
+  app_proxy:
+    environment:
+      APP_HOST: gardner-homeconnect_server_1
+      APP_PORT: 8099
+      # Only device protocols bypass Umbrel browser login. Upstream signatures
+      # still authenticate requests. Browser/admin routes retain Umbrel auth.
+      PROXY_AUTH_WHITELIST: "/v2/pilotauth,/v2/pilotauth/,/ws/*,/v1.1/devices/*,/v1.4/*,/connectincoming/*"
+  server:
+    image: ghcr.io/nexussean/homeconnect-umbrel:amd64@sha256:3edaf5816acc89ae19cd2b0136a48b504ade703de927c3dc9c2941d09815f61c
+    user: "1000:1000"
+    init: true
+    restart: on-failure
+    environment:
+      HC_BIND: "0.0.0.0:8099"
+      HC_DATA_DIR: /data
+      HC_WEB_DIR: /app/web/dist
+      HC_PUBLIC_URL: ""
+      HC_DEVICE_SSH_TARGET: ""
+      HC_BOOTSTRAP_PASSWORD: "${APP_PASSWORD}"
+      HC_SCP_LIMIT_KBIT: "8000"
+      HC_SYNC_ENABLED: "true"
+      HC_SYNC_INTERVAL_SECS: "60"
+      HC_SYNC_FULLRES: "true"
+      HC_DEVICE_AUTOPRUNE: "false"
+      HC_MOVIE_ENABLED: "false"
+      HC_SUBS_ENABLED: "false"
+      HC_DENOISE_ENABLED: "false"
+      HC_RETAIN_DAYS: "0"
+      HC_RETAIN_DRIVES: "0"
+      HC_RETAIN_GB: "0"
+    volumes:
+      - ${APP_DATA_DIR}/data:/data
+    healthcheck:
+      test: ["CMD", "python3", "/opt/umbrel/healthcheck.py"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
